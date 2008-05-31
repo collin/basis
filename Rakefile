@@ -28,6 +28,17 @@ Rake::GemPackageTask.new(basis_gemspec) do |pkg|
   pkg.gem_spec = basis_gemspec
 end
 
+namespace :gem do
+  namespace :spec do
+    desc "Update basis.gemspec"
+    task :generate do
+      File.open("basis.gemspec", "w") do |f|
+        f.puts(basis_gemspec.to_ruby)
+      end
+    end
+  end
+end
+
 task :install => :package do
   sh %{sudo gem install pkg/basis-#{Basis::VERSION}}
 end
