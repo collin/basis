@@ -38,7 +38,7 @@ describe Basis::Installer do
     
     it "copies files from the source to the target" do
       @installer.install
-      (@target + "monkeys.txt").must be_exist # we speak engrish good
+      (@target + "monkeys.txt").must be_exist
     end
 
     it "interpolates [file]" do
@@ -80,6 +80,11 @@ describe Basis::Installer do
     it "render files via ERB with nested context expressions" do
       @erb_installer.install(valid_context)
       IO.read(@target + "nested.txt").must == "baz"
+    end
+    
+    it "ignores all metadata files in source/basis" do
+      @installer.install
+      (@target + "basis" + "ignored.txt").must_not be_exist
     end
     
     it "prompts before overwriting files that already exist"

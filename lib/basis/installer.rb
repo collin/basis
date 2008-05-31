@@ -20,6 +20,7 @@ module Basis
     def install(context={})
       Pathname.glob(@source + "**" + "*").each do |sourcepath|
         next unless sourcepath.file?
+        next if /^basis/ =~ sourcepath.relative_path_from(@source)
         
         targetstr = sourcepath.relative_path_from(@source).expand_path(@target).to_s
         
