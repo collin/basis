@@ -1,43 +1,35 @@
+require "fileutils"
 require "rubygems"
 require "rake/gempackagetask"
 require "spec/rake/spectask"
 
 require "./lib/basis/version.rb"
 
-module Basis
-  GEM = "basis"
-  AUTHOR = "John Barnette"
-  EMAIL = "jbarnette@rubyforge.org"
-  HOMEPAGE = "http://github.com/jbarnette/basis"
-  SUMMARY = "Basis is smart project skeletons. And components. And cake"
-end
-
-spec = Gem::Specification.new do |s|
-  s.name = Basis::GEM
-  s.version = Basis::VERSION
-  s.platform = Gem::Platform::RUBY
-  s.has_rdoc = true
-  s.extra_rdoc_files = ["README", "LICENSE", "TODO"]
-  s.summary = Basis::SUMMARY
-  s.description = s.summary
-  s.author = Basis::AUTHOR
-  s.email = Basis::EMAIL
-  s.homepage = Basis::HOMEPAGE
+basis_gemspec = Gem::Specification.new do |s|
+  s.name             = "basis"
+  s.version          = Basis::VERSION
+  s.platform         = Gem::Platform::RUBY
+  s.has_rdoc         = true
+  s.extra_rdoc_files = ["README.rdoc"]
+  s.summary          = "Basis is smart project skeletons. And generators. And cake."
+  s.description      = s.summary
+  s.author           = "John Barnette"
+  s.email            = "jbarnette@rubyforge.org"
+  s.homepage         = "http://github.com/jbarnette/basis"
+  s.require_path     = "lib"
+  s.autorequire      = "basis"
+  s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib,specs}/**/*")
   
   # Uncomment this to add a dependency
   # s.add_dependency "foo"
-  
-  s.require_path = "lib"
-  s.autorequire = Basis::GEM
-  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{lib,specs}/**/*")
 end
 
-Rake::GemPackageTask.new(spec) do |pkg|
-  pkg.gem_spec = spec
+Rake::GemPackageTask.new(basis_gemspec) do |pkg|
+  pkg.gem_spec = basis_gemspec
 end
 
-task :install => [:package] do
-  sh %{sudo gem install pkg/#{Basis::GEM}-#{Basis::VERSION}}
+task :install => :package do
+  sh %{sudo gem install pkg/basis-#{Basis::VERSION}}
 end
 
 desc "Run all specs"
@@ -46,5 +38,7 @@ Spec::Rake::SpecTask.new do |t|
   t.spec_opts = ["--options", "spec/spec.opts"]
 end
 
-# Rake::Task[:default].prerequisites.clear
 task :default => :spec
+
+desc "Remove all generated artifacts"
+task :clean => :clobber_package
