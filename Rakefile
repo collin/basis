@@ -18,7 +18,7 @@ basis_gemspec = Gem::Specification.new do |s|
   s.homepage         = "http://github.com/jbarnette/basis"
   s.require_path     = "lib"
   s.autorequire      = "basis"
-  s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib,specs}/**/*")
+  s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib,spec}/**/*")
   
   # Uncomment this to add a dependency
   # s.add_dependency "foo"
