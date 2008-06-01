@@ -13,6 +13,12 @@ module Basis
     end
   end
   
+  class FileAlreadyExists < Reportable
+    def initialize(file)
+      super("#{file} already exists")
+    end
+  end
+  
   class UnknownScheme < Reportable
     def initialize(url)
       super("Unknown URL scheme: #{url}")

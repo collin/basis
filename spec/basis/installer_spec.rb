@@ -96,13 +96,18 @@ describe Basis::Installer do
       (@target + "copy.txt").must be_exist
     end
     
-    it "prompts before overwriting files that already exist"
-    # def test_initialize_complains_about_targets_that_already_exist
-    #   assert_raise(Basis::DirectoryAlreadyExists) do
-    #     Basis::Installer.new(@static, FIXTURES_PATH)
-    #   end
-    # end
-    
+    it "pings the lifecycle on files that already exist" do
+      @installer.install
+
+      def (@installer.lifecycle).install?(file)
+        raise Basis::FileAlreadyExists.new(file) if file.exist?
+        true
+      end
+      
+      (@target + "monkeys.txt").must be_exist
+      lambda { @installer.install }.must raise_error(Basis::FileAlreadyExists)
+    end
+
     def valid_context
       { :greeting => "hai!", :foo => Struct.new(:bar).new("baz") } 
     end

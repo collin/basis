@@ -8,14 +8,13 @@ require "basis/installer/lifecycle"
 
 module Basis
   class Installer
-    attr_reader :source, :target
+    attr_reader :lifecycle, :source, :target
 
     def initialize(source, target)
       @source = Pathname.new(source).freeze
       @target = Pathname.new(target).freeze
 
       raise Basis::DirectoryNotFound.new(@source) unless @source.directory?
-      raise Basis::DirectoryAlreadyExists.new(@target) if @target.exist?
 
       @lifecycle = create_or_load_lifecycle
     end
@@ -36,7 +35,6 @@ module Basis
 
         if @lifecycle.install?(targetpath)
           targetpath.dirname.mkpath
-
           @lifecycle.installing(targetpath)
 
           if erb?(sourcepath)

@@ -7,11 +7,15 @@ module Basis
         @installer = installer
       end
 
-      def install?(path); true end
+      def install?(file)
+        true # FIXME: user prompt on overwrite, etc
+      end
 
-      def installing(path); end
+      def installing(file)
+      end
 
-      def installed(path); end
+      def installed(file)
+      end      
     end
   end
 end
