@@ -23,7 +23,8 @@ describe Basis::Installer do
     end
   
     it "complains when a source is not found" do
-      lambda { Basis::Installer.new("nonexistent", @target) }.must raise_error(Basis::DirectoryNotFound)
+      lambda { Basis::Installer.new("nonexistent", @target) }.
+        must raise_error(Basis::DirectoryNotFound)
     end
   end
   

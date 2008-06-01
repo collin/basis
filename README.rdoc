@@ -2,6 +2,10 @@
 
 Basis is smart project skeletons. And generators. And cake.
 
+== Installation
+
+  sudo gem install basis
+
 == License
 
 Copyright (c) 2007 John Barnette, Yehuda Katz
