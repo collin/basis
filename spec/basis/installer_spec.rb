@@ -8,8 +8,8 @@ require "basis/installer"
 
 describe Basis::Installer do
   before :each do
-    @static  = Pathname.new(File.join(FIXTURES_PATH, "static"))
-    @target  = Pathname.new(File.join(Dir.tmpdir, "destination"))
+    @static = Pathname.new(File.join(FIXTURES_PATH, "static"))
+    @target = Pathname.new(File.join(Dir.tmpdir, "destination"))
     
     FileUtils.rm_rf(@target)
 
@@ -30,10 +30,12 @@ describe Basis::Installer do
   describe "#install" do
     before :each do
       @dynamic = Pathname.new(File.join(FIXTURES_PATH, "dynamic"))
-      @erb     = Pathname.new(File.join(FIXTURES_PATH, "erb"))
+      @erb = Pathname.new(File.join(FIXTURES_PATH, "erb"))
+      @lifecycle = Pathname.new(File.join(FIXTURES_PATH, "lifecycle"))
       
       @dynamic_installer = Basis::Installer.new(@dynamic, @target)
       @erb_installer = Basis::Installer.new(@erb, @target)
+      @lifecycle_installer = Basis::Installer.new(@lifecycle, @target)
     end
     
     it "copies files from the source to the target" do
@@ -85,6 +87,12 @@ describe Basis::Installer do
     it "ignores all metadata files in source/basis" do
       @installer.install
       (@target + "basis" + "ignored.txt").must_not be_exist
+    end
+    
+    it "respects the lifecycle when copying files" do
+      @lifecycle_installer.install
+      (@target + "nocopy.txt").must_not be_exist
+      (@target + "copy.txt").must be_exist
     end
     
     it "prompts before overwriting files that already exist"
