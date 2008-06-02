@@ -3,22 +3,10 @@ module Basis
     
   class DirectoryNotFound < Reportable
     def initialize(directory)
-      super("#{directory} does not exist")
+      super("#{directory} doesn't exist")
     end
   end
 
-  class DirectoryAlreadyExists < Reportable
-    def initialize(directory)
-      super("#{directory} already exists")
-    end
-  end
-  
-  class FileAlreadyExists < Reportable
-    def initialize(file)
-      super("#{file} already exists")
-    end
-  end
-  
   class UnknownScheme < Reportable
     def initialize(url)
       super("Unknown URL scheme: #{url}")

@@ -100,12 +100,12 @@ describe Basis::Installer do
       @installer.install
 
       def (@installer.lifecycle).install?(file)
-        raise Basis::FileAlreadyExists.new(file) if file.exist?
+        raise RuntimeError if file.exist?
         true
       end
       
       (@target + "monkeys.txt").must be_exist
-      lambda { @installer.install }.must raise_error(Basis::FileAlreadyExists)
+      lambda { @installer.install }.must raise_error(RuntimeError)
     end
 
     def valid_context
