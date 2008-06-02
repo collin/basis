@@ -75,12 +75,12 @@ describe Basis::Installer do
       (@target + "[file].txt").must be_exist
     end
     
-    it "render files via ERB with the context" do
+    it "renders files via ERB with the context" do
       @erb_installer.install(valid_context)
       IO.read(@target + "simple.txt").must == "hai!"
     end
     
-    it "render files via ERB with nested context expressions" do
+    it "renders files via ERB with nested context expressions" do
       @erb_installer.install(valid_context)
       IO.read(@target + "nested.txt").must == "baz"
     end
