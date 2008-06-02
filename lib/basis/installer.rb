@@ -28,14 +28,14 @@ module Basis
 
         # valid: [identifier(.identifier ...)]
         targetstr.gsub!(/\[([a-z_][a-z0-9_]*(\.[a-z_][a-z0-9_]*)*)\]/i) do |match|
-          propify(context, match)
+          interpolate(context, match)
         end
 
         targetpath = Pathname.new(targetstr)
 
         if @lifecycle.install?(targetpath)
-          targetpath.dirname.mkpath
           @lifecycle.installing(targetpath)
+          targetpath.dirname.mkpath
 
           if erb?(sourcepath)
             targetpath.open("w") do |t|
@@ -62,7 +62,7 @@ module Basis
     # any nesting thereof. Nils, unknown keys, and missing methods return the
     # original expression.
 
-    def propify(target, expression)
+    def interpolate(target, expression)
       nodes = expression[1..-2].split(".").collect { |n| n.to_sym }
 
       nodes.inject(target) do |memo, node|
