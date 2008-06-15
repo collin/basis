@@ -20,6 +20,8 @@ module Basis
     end
 
     def install(context={})
+      @lifecycle.starting
+      
       Pathname.glob(@source + "**" + "*").each do |sourcepath|
         next unless sourcepath.file?
         next if /^basis/ =~ sourcepath.relative_path_from(@source)
@@ -50,6 +52,8 @@ module Basis
           @lifecycle.installed(targetpath)
         end
       end
+      
+      @lifecycle.finished
     end
 
     private
@@ -72,8 +76,8 @@ module Basis
 
     # If the source directory has a basis/lifecycle.rb file, load it in a protected
     # way, find the first constant that's < Basis::Installer::Lifecycle, and create
-    # a new instance of it. If there's no lifecycle file, just create a new instance
-    # of Basis::Installer::Lifecycle itself -- it's a no-op.
+    # a new instance of it. If there's no lifecycle file or no subclass, just create
+    # a new instance of the default lifecycle.
 
     def create_or_load_lifecycle
       lifecycle_path = (@source + "basis" + "lifecycle.rb")

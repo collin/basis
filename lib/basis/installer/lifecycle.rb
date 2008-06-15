@@ -7,16 +7,26 @@ module Basis
         @installer = installer
         @force = false
       end
+
+      # Called when installation starts. Nothing's happened yet.
+      
+      def starting
+      end
+      
+      # Called when installation's complete, assuming nothing asploded.
+      
+      def finished
+      end
       
       # Called to decide whether or not to install a target file. Default impl:
-      # If the target <tt>file</tt> doesn't exist or installation has been
+      # If the target <tt>destination</tt> doesn't exist or installation has been
       # forced, return true. Otherwise, ask the user to decide.
 
-      def install?(file)
-        return true if @force || !file.exist?
+      def install?(destination)
+        return true if @force || !destination.exist?
 
         lambda do
-          $stdout.print "#{file.relative_path_from(@installer.target)} exists, overwrite? [Ynaq] "
+          $stdout.print "#{destination.relative_path_from(@installer.target)} exists, overwrite? [Ynaq] "
           $stdout.flush
 
           case $stdin.gets.chomp.downcase
@@ -29,14 +39,14 @@ module Basis
         end.call
       end
 
-      # Called right before a target <tt>file</tt> is installed.
+      # Called right before a file is installed.
 
-      def installing(file)
+      def installing(destination)
       end
 
-      # Called right after a target <tt>file</tt> is installed.
+      # Called right after a file is installed.
 
-      def installed(file)
+      def installed(destination)
       end      
     end
   end
