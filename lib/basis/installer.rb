@@ -20,13 +20,13 @@ module Basis
     end
 
     def install(context={})
-      @lifecycle.starting
+      lifecycle.starting
       
-      Pathname.glob(@source + "**" + "*").each do |sourcepath|
+      Pathname.glob(source + "**" + "*").each do |sourcepath|
         next unless sourcepath.file?
-        next if /^basis/ =~ sourcepath.relative_path_from(@source)
+        next if /^basis/ =~ sourcepath.relative_path_from(source)
 
-        targetstr = sourcepath.relative_path_from(@source).expand_path(@target).to_s
+        targetstr = sourcepath.relative_path_from(source).expand_path(target).to_s
 
         # valid: [identifier(.identifier ...)]
         targetstr.gsub!(/\[([a-z_][a-z0-9_]*(\.[a-z_][a-z0-9_]*)*)\]/i) do |match|
@@ -35,8 +35,8 @@ module Basis
 
         targetpath = Pathname.new(targetstr)
 
-        if @lifecycle.install?(targetpath)
-          @lifecycle.installing(targetpath)
+        if lifecycle.install?(targetpath)
+          lifecycle.installing(targetpath)
           targetpath.dirname.mkpath
 
           if erb?(sourcepath)
@@ -49,11 +49,11 @@ module Basis
             FileUtils.copy(sourcepath, targetpath)
           end
 
-          @lifecycle.installed(targetpath)
+          lifecycle.installed(targetpath)
         end
       end
       
-      @lifecycle.finished
+      lifecycle.finished
     end
 
     private
@@ -80,7 +80,7 @@ module Basis
     # a new instance of the default lifecycle.
 
     def create_or_load_lifecycle
-      lifecycle_path = (@source + "basis" + "lifecycle.rb")
+      lifecycle_path = (source + "basis" + "lifecycle.rb")
       return Basis::Installer::Lifecycle.new(self) unless lifecycle_path.exist?
 
       anon = Module.new
