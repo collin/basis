@@ -9,15 +9,15 @@ module Basis
       end
 
       # Called when installation starts. Nothing's happened yet.
-      
+
       def starting
       end
-      
+
       # Called when installation's complete, assuming nothing asploded.
-      
+
       def finished
       end
-      
+
       # Called to decide whether or not to install a target file. Default impl:
       # If the target <tt>destination</tt> doesn't exist or installation has been
       # forced, return true. Otherwise, ask the user to decide.
@@ -47,7 +47,7 @@ module Basis
       # Called right after a file is installed.
 
       def installed(destination)
-      end      
+      end
     end
   end
 end
