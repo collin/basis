@@ -33,10 +33,12 @@ describe Basis::Installer do
       @dynamic = Pathname.new(File.join(FIXTURES_PATH, "dynamic"))
       @erb = Pathname.new(File.join(FIXTURES_PATH, "erb"))
       @lifecycle = Pathname.new(File.join(FIXTURES_PATH, "lifecycle"))
+      @linking = Pathname.new(File.join(FIXTURES_PATH, "linking"))
       
       @dynamic_installer = Basis::Installer.new(@dynamic, @target)
       @erb_installer = Basis::Installer.new(@erb, @target)
       @lifecycle_installer = Basis::Installer.new(@lifecycle, @target)
+      @linking_installer = Basis::Installer.new(@linking, @target)
     end
     
     it "copies files from the source to the target" do
@@ -94,6 +96,50 @@ describe Basis::Installer do
       @lifecycle_installer.install
       (@target + "nocopy.txt").must_not be_exist
       (@target + "copy.txt").must be_exist
+    end
+
+    it "copies links (paths|to.file)" do
+      @linking_installer.install
+      (@target + "file_name.extension").must be_exist
+    end
+
+    it "traverses links deeply" do
+      @linking_installer.install
+      (@target + "deeper" + "file_name.extension").must be_exist
+    end
+
+    it "copies links (to|directories)" do
+      @linking_installer.install
+      (@target + "directory" + "file_name.extension").must be_exist
+    end
+
+    it "copies links (paths|to|directory)" do
+      @linking_installer.install
+      file = @target + "directory" + "nested_directory" + "file_name.extension"
+      file.must be_exist
+    end
+
+    it "traverses links anywhere" do
+      # Make a little file to link to.
+      anywhere = Pathname.new(File.join(Dir.tmpdir, "anywhere"))
+      anywhere += "everywhere"
+      FileUtils.mkdir_p(anywhere)
+      anywhere += "you_want.to_go"
+      FileUtils.touch(anywhere)
+      
+      # Work out the relative path
+      path = anywhere.relative_path_from(@linking + "deeper")
+
+      # Touch a link
+      link = @linking + "deeper" + "(#{path.to_s.gsub('/', '|')})"
+      FileUtils.touch(link)
+
+      @linking_installer.install
+      (@target + "deeper" + "you_want.to_go").must be_exist
+
+      # Cleaning up house
+      FileUtils.rm_f(link)
+      FileUtils.rm_f(anywhere)
     end
     
     it "pings the lifecycle on files that already exist" do
