@@ -6,6 +6,40 @@ Basis is smart project skeletons. And generators. And cake.
 
   sudo gem install basis
 
+== Usage
+
+Making your own installers is easy:
+
+Specify some values up here:
+
+  directory = "folder"
+  file      = "document"
+  context   = {:foo => :bar, :baz => {:bat => :what}}
+
+  installer = Basis::Installer.new(path_to_source, path_to_target)
+  installer.install(context)
+
+If your source directory looks like this:
+
+  parent_of_source/
+    sibling_of_source/
+      file_name.extension
+    source/
+      [directory]
+        [file].txt
+        ([path_to_source]|..|sibling_of_source)
+
+Your target directory will look like this:
+  
+  folder/
+    document.text
+    sibling_of_source/
+      file_name.extension
+
+Neat huh?    
+
+Don't forget! Basis detects and runs ERB in your source files!
+
 == License
 
 Copyright (c) 2007 John Barnette, Yehuda Katz
